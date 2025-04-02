@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interest Management System</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid black; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        
+        
+      
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            background-image: url();
+            background-size:cover;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+    </style>
+    
+</head>
+<body>
+    <h2>Interest Management</h2>
+    <form id="clientForm">
+        <label>Name: <input type="text" id="name" required></label><br>
+        <label>Mobile: <input type="text" id="mobile" required></label><br>
+        <label>Address: <input type="text" id="address" required></label><br>
+        <label>Date Taken: <input type="date" id="dateTaken" required></label><br>
+        <label>Date Paid: <input type="date" id="datePaid" required></label><br>
+        <label>Interest Rate (%): <input type="number" id="interestRate" step="any" required></label><br>
+        <label>Amount Taken: <input type="number" id="amountTook" step ="any" required></label><br>
+        <button type="submit">Calculate & Save</button>
+    </form>
+
+    <h3>Client Details</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Mobile</th>
+                <th>Address</th>
+                <th>Date Taken</th>
+                <th>Date Paid</th>
+                <th>Interest Rate</th>
+                <th>Amount Taken</th>
+                <th>Total Amount</th>
+                <th>Total Months</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="clientTableBody"></tbody>
+    </table>
+    
+    <script type="text/javascript">
+    
+    document.querySelector("form").addEventListener("submit", function (event) {
+        const dateTaken = document.getElementById("dateTaken").value;
+        const datePaid = document.getElementById("datePaid").value;
+
+        if (!dateTaken || !datePaid) {
+            event.preventDefault(); // Prevent form submission
+            alert("Please select both Date Taken and Date Paid.");
+        }
+    });
+
+    </script>
+
+    <script>
+        document.getElementById("clientForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const clientData = {
+                name: document.getElementById("name").value,
+                mobile: document.getElementById("mobile").value,
+                address: document.getElementById("address").value,
+                dateTaken: document.getElementById("dateTaken").value,
+                datePaid: document.getElementById("datePaid").value,
+                interestRate: parseFloat(document.getElementById("interestRate").value),
+                amountTook: parseFloat(document.getElementById("amountTook").value)
+            };
+
+            fetch("http://localhost:8080/api/clients", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(clientData)
+            })
+            .then(response => response.json())
+            .then(client => {
+                const tableBody = document.getElementById("clientTableBody");
+                const row = `<tr>
+                    <td>${client.name}</td>
+                    <td>${client.mobile}</td>
+                    <td>${client.address}</td>
+                    <td>${client.dateTaken}</td>
+                    <td>${client.datePaid}</td>
+                    <td>${client.interestRate}%</td>
+                    <td>${client.amountTook}</td>
+                    <td>${client.totalAmount}</td>
+                    <td>${client.totalMonths}</td>
+                    <td>${client.status}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+    
+    
+</body>
+</html>
