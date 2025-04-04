@@ -12,7 +12,7 @@ import com.loan.service.ClientService;
 
 import java.util.List;
 
-@CrossOrigin(origins = "mysql://root:jZCVnJqtUciEXxzkjnelepYwjteutbBB@maglev.proxy.rlwy.net:21401/railway") // Allows frontend to access API
+ // Allows frontend to access API
 @RestController
 @RequestMapping("/api/clients")
 public class ClientController {
